@@ -13,4 +13,4 @@ public class Main {
 }
 
 
-//compressor.zip("/Users/kalmahik/Desktop/2-6", "archive.zip");
+//Users/kalmahik/Desktop/2-6

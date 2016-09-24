@@ -32,13 +32,14 @@ public class Menu {
             select = Integer.parseInt(str);
 
             if (select == 1) {
-                System.out.println("ВВедите полное имя файла(включая путь и расширение) или папки(включая путь)");
+                System.out.println("Введите полное имя файла(включая путь и расширение) или папки(включая путь)");
                 String sourcePath = reader.readLine();
 
                 System.out.println("Введите имя сохраняемого бэкапа с расширением .zip");
                 String targetPath = reader.readLine();
 
                 compressor.zip(sourcePath, targetPath);
+
             } else if (select == 2) {
 
             } else if (select == 3) {
@@ -47,7 +48,6 @@ public class Menu {
                 reader.close();
                 break;
             }
-
 
         }
     }
