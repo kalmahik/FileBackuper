@@ -43,7 +43,7 @@ public class Menu {
                 compressor.zip(sourcePath, targetPath);
 
             } else if (select == 2) {
-                System.out.println("Введите имя имя бэкапа");
+                System.out.println("Введите имя бэкапа");
                 sourcePath = reader.readLine();
                 compressor.unzip(sourcePath);
 

@@ -29,7 +29,6 @@ public class FileCompressor {
         int len;
         while ((len = is.read(buffer)) >= 0)
             os.write(buffer, 0, len);
-        is.close();
     }
 
     private ArrayList<File> doFileList(File file, ArrayList<File> filesToCompress) {
@@ -45,29 +44,25 @@ public class FileCompressor {
 
 
     public void unzip(String sourceZip) throws IOException {
-        final String dstDirectory = destinationDirectory(sourceZip);
-        final File dstDir = new File(dstDirectory);
-        if (!dstDir.exists()) {
-            dstDir.mkdir();
-        }
+        String dstDirectory = destinationDirectory(sourceZip);
+        File dstDir = new File(dstDirectory);
 
         if (!dstDir.exists()) {
             dstDir.mkdir();
         }
-        // Получаем содержимое ZIP архива
         ZipInputStream zis = new ZipInputStream(new FileInputStream(sourceZip));
         ZipEntry ze = zis.getNextEntry();
         String nextFileName;
         while (ze != null) {
             nextFileName = ze.getName();
             File nextFile = new File(dstDirectory + File.separator + nextFileName);
-            System.out.println("Распаковываем: " + nextFile.getAbsolutePath());
             if (ze.isDirectory()) {
                 nextFile.mkdir();
             } else {
                 new File(nextFile.getParent()).mkdirs();
                 FileOutputStream fos = new FileOutputStream(nextFile);
                 write(zis, fos);
+                fos.close();
             }
             ze = zis.getNextEntry();
         }
