@@ -19,6 +19,8 @@ public class Menu {
     public void start() throws IOException {
         int select;
         String str;
+        String sourcePath;
+        String targetPath;
         FileCompressor compressor = new FileCompressor();
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -33,14 +35,17 @@ public class Menu {
 
             if (select == 1) {
                 System.out.println("Введите полное имя файла(включая путь и расширение) или папки(включая путь)");
-                String sourcePath = reader.readLine();
+                sourcePath = reader.readLine();
 
                 System.out.println("Введите имя сохраняемого бэкапа с расширением .zip");
-                String targetPath = reader.readLine();
+                targetPath = reader.readLine();
 
                 compressor.zip(sourcePath, targetPath);
 
             } else if (select == 2) {
+                System.out.println("Введите имя имя бэкапа");
+                sourcePath = reader.readLine();
+                compressor.unzip(sourcePath);
 
             } else if (select == 3) {
 

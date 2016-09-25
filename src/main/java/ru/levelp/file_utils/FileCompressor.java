@@ -5,6 +5,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class FileCompressor {
@@ -13,22 +14,22 @@ public class FileCompressor {
         Path path = FileSystems.getDefault().getPath(sourcePath);
         ArrayList<File> filesToCompress = new ArrayList<>();
         doFileList(path.toFile(), filesToCompress);
-        ZipOutputStream out = new ZipOutputStream(new FileOutputStream(targetPath));
+        ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(targetPath));
         for (File f : filesToCompress) {
-            out.putNextEntry(new ZipEntry(f.getPath()));
+            zos.putNextEntry(new ZipEntry(f.getPath()));
             FileInputStream fis = new FileInputStream(f);
-            write(fis, out);
+            write(fis, zos);
             fis.close();
         }
-        out.close();
+        zos.close();
     }
 
-    private void write(InputStream in, OutputStream out) throws IOException {
+    private void write(InputStream is, OutputStream os) throws IOException {
         byte[] buffer = new byte[2048];
         int len;
-        while ((len = in.read(buffer)) >= 0)
-            out.write(buffer, 0, len);
-        in.close();
+        while ((len = is.read(buffer)) >= 0)
+            os.write(buffer, 0, len);
+        is.close();
     }
 
     private ArrayList<File> doFileList(File file, ArrayList<File> filesToCompress) {
@@ -43,7 +44,41 @@ public class FileCompressor {
     }
 
 
-    public void unzip(String sourceZip, String targetFolder) throws IOException {
+    public void unzip(String sourceZip) throws IOException {
+        final String dstDirectory = destinationDirectory(sourceZip);
+        final File dstDir = new File(dstDirectory);
+        if (!dstDir.exists()) {
+            dstDir.mkdir();
+        }
+
+        if (!dstDir.exists()) {
+            dstDir.mkdir();
+        }
+        // Получаем содержимое ZIP архива
+        ZipInputStream zis = new ZipInputStream(new FileInputStream(sourceZip));
+        ZipEntry ze = zis.getNextEntry();
+        String nextFileName;
+        while (ze != null) {
+            nextFileName = ze.getName();
+            File nextFile = new File(dstDirectory + File.separator + nextFileName);
+            System.out.println("Распаковываем: " + nextFile.getAbsolutePath());
+            if (ze.isDirectory()) {
+                nextFile.mkdir();
+            } else {
+                new File(nextFile.getParent()).mkdirs();
+                FileOutputStream fos = new FileOutputStream(nextFile);
+                write(zis, fos);
+            }
+            ze = zis.getNextEntry();
+        }
+        zis.closeEntry();
+        zis.close();
 
     }
+
+    private String destinationDirectory(final String srcZip) {
+        return srcZip.substring(0, srcZip.lastIndexOf("."));
+    }
+
+
 }
