@@ -38,7 +38,7 @@ public class Menu {
                 sourcePath = reader.readLine();
 
                 System.out.println("Введите имя сохраняемого бэкапа с расширением .zip");
-                targetPath = reader.readLine();
+                targetPath = "backups/" + reader.readLine();
 
                 compressor.zip(sourcePath, targetPath);
 
